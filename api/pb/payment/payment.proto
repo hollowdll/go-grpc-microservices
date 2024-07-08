@@ -1,0 +1,25 @@
+// Payment service gRPC API definitions
+// v1.0
+
+syntax = "proto3";
+package paymentpb;
+
+option go_package = "/api/pb/payment/gen";
+
+message CreatePaymentRequest {
+  // The ID of the customer making the payment.
+  string customer_id = 1;
+  // The ID of the order that should be paid.
+  string order_id = 2;
+  // The total price to pay in cents.
+  int32 total_price_cents = 3;
+}
+
+message CreatePaymentResponse {
+  // The ID of the created payment.
+  string payment_id = 1;
+}
+
+service PaymentService {
+  rpc CreatePayment(CreatePaymentRequest) returns (CreatePaymentResponse){}
+}
