@@ -1,28 +1,28 @@
 // Order service gRPC API definitions
 // v1.0
 
-syntax "proto3";
-package orderservicepb;
+syntax = "proto3";
+package orderpb;
 
 option go_package = "/api/pb/order/gen";
 
 message OrderItem {
-  // The ID of the ordered product.
-  int32 product_id = 1;
+  // The code of the ordered product.
+  string product_code = 1;
   // The Quantity of the ordered product.
   int32 quantity = 2;
 }
 
 message CreateOrderRequest {
   // The ID of the customer who created the order.
-  int64 customer_id = 1;
+  string customer_id = 1;
   // The ordered products.
   repeated OrderItem order_items = 2;
 }
 
 message CreateOrderResponse {
   // The ID of the created order.
-  int64 order_id = 1;
+  string order_id = 1;
 }
 
 service OrderService {

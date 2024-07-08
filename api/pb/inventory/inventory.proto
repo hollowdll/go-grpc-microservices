@@ -1,0 +1,32 @@
+// Inventory service gRPC API definitions
+// v1.0
+
+syntax = "proto3";
+package inventorypb;
+
+option go_package = "/api/pb/inventory/gen";
+
+message ProductDetails {
+  // The code that identifies the product.
+  string product_code = 1;
+  // The name of the product.
+  string name = 2;
+  // The description of the product.
+  string description = 3;
+  // The unit price of the product in cents.
+  int32 unit_price_cents = 4;
+}
+
+message GetProductDetailsRequest {
+  // The codes of the products whose details should be returned.
+  repeated string product_codes = 1;
+}
+
+message GetProductDetailsResponse {
+  // The returned product details.
+  repeated ProductDetails product_details = 1;
+}
+
+service InventoryService {
+  rpc GetProductDetails(GetProductDetailsRequest) returns (GetProductDetailsResponse){}
+}
