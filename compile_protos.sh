@@ -1,4 +1,4 @@
-#!bin/bash
+#!/bin/bash
 
 # This script generates source codes from .proto files
 # using Protobuf compiler protoc.
