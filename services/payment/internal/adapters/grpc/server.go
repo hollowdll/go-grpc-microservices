@@ -35,8 +35,9 @@ func (a *Adapter) Run() {
 	grpcServer := grpc.NewServer()
 	paymentpb.RegisterPaymentServiceServer(grpcServer, a)
 
-	// this enables gRPC services to be tested with grpcurl
+	// this enables gRPC services to be tested with e.g. grpcurl
 	if a.config.IsDevelopmentMode() {
+		log.Println("development mode detected: enabling gRPC server reflection ...")
 		reflection.Register(grpcServer)
 	}
 
