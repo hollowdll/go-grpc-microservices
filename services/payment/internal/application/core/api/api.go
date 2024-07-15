@@ -16,7 +16,7 @@ func NewApplication() *Application {
 	return &Application{}
 }
 
-func (a *Application) Charge(ctx context.Context, payment domain.Payment) (domain.Payment, error) {
+func (a *Application) Charge(ctx context.Context, payment *domain.Payment) (*domain.Payment, error) {
 	// Some business logic
 	// e.g. call 3rd party payment gateway and save payment to database
 

@@ -9,5 +9,5 @@ import (
 // APIPort is an inbound port interface for the core business logic
 // that the application can implement.
 type APIPort interface {
-	Charge(ctx context.Context, payment domain.Payment) (domain.Payment, error)
+	Charge(ctx context.Context, payment *domain.Payment) (*domain.Payment, error)
 }
