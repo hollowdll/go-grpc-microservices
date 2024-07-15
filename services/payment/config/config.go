@@ -11,12 +11,20 @@ const (
 	ApplicationModeEnv string = "PAYMENT_APPLICATION_MODE"
 )
 
-func GetGrpcPort() int {
-	return convertPort(getEnvValue(GrpcPortEnv))
+type Config struct {
+	GrpcPort        int
+	ApplicationMode string
 }
 
-func IsDevelopmentMode() bool {
-	return getEnvValue(ApplicationModeEnv) == "development"
+func NewConfig() *Config {
+	return &Config{
+		GrpcPort:        convertPort(getEnvValue(GrpcPortEnv)),
+		ApplicationMode: getEnvValue(ApplicationModeEnv),
+	}
+}
+
+func (c *Config) IsDevelopmentMode() bool {
+	return c.ApplicationMode == "development"
 }
 
 func getEnvValue(key string) string {

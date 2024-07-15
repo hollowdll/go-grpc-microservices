@@ -5,6 +5,7 @@ import (
 	"log"
 	"net"
 
+	"github.com/hollowdll/go-grpc-microservices/services/payment/config"
 	"github.com/hollowdll/go-grpc-microservices/services/payment/internal/ports"
 	"github.com/hollowdll/grpc-microservices-proto/gen/golang/paymentpb"
 	"google.golang.org/grpc"
@@ -12,22 +13,22 @@ import (
 
 type Adapter struct {
 	api    ports.APIPort
-	port   int
+	config *config.Config
 	server *grpc.Server
 	paymentpb.UnimplementedPaymentServiceServer
 }
 
-func NewAdapter(api ports.APIPort, port int) *Adapter {
-	return &Adapter{api: api, port: port}
+func NewAdapter(api ports.APIPort, config *config.Config) *Adapter {
+	return &Adapter{api: api, config: config}
 }
 
 // Run runs the gRPC server and starts to listen for requests.
 func (a *Adapter) Run() {
-	log.Printf("initializing payment service gRPC server on port %d ...", a.port)
+	log.Printf("initializing payment service gRPC server on port %d ...", a.config.GrpcPort)
 
-	lis, err := net.Listen("tcp", fmt.Sprintf(":%d", a.port))
+	lis, err := net.Listen("tcp", fmt.Sprintf(":%d", a.config.GrpcPort))
 	if err != nil {
-		log.Fatalf("failed to listen on port %d: %v", a.port, err)
+		log.Fatalf("failed to listen on port %d: %v", a.config.GrpcPort, err)
 	}
 
 	grpcServer := grpc.NewServer()
