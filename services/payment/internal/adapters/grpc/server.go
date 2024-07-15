@@ -9,6 +9,7 @@ import (
 	"github.com/hollowdll/go-grpc-microservices/services/payment/internal/ports"
 	"github.com/hollowdll/grpc-microservices-proto/gen/golang/paymentpb"
 	"google.golang.org/grpc"
+	"google.golang.org/grpc/reflection"
 )
 
 type Adapter struct {
@@ -33,6 +34,11 @@ func (a *Adapter) Run() {
 
 	grpcServer := grpc.NewServer()
 	paymentpb.RegisterPaymentServiceServer(grpcServer, a)
+
+	// this enables gRPC services to be tested with grpcurl
+	if a.config.IsDevelopmentMode() {
+		reflection.Register(grpcServer)
+	}
 
 	log.Printf("starting payment service gRPC server ...")
 	log.Printf("payment service gRPC server listening at %v", lis.Addr())
