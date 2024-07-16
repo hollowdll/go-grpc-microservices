@@ -20,3 +20,8 @@
 # Go workspace file
 go.work
 go.work.sum
+
+# Config files
+paymentservice.yaml
+inventoryservice.yaml
+orderservice.yaml
