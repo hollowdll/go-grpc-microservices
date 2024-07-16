@@ -40,7 +40,7 @@ type Config struct {
 func NewConfig() *Config {
 	log.Printf("loading configurations ...")
 
-	viper.SetConfigName("paymentservice")
+	viper.SetConfigName("paymentservice-config")
 	viper.AddConfigPath(".")
 	viper.SetConfigType("yaml")
 

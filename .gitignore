@@ -22,6 +22,6 @@ go.work
 go.work.sum
 
 # Config files
-paymentservice.yaml
-inventoryservice.yaml
-orderservice.yaml
+paymentservice-config.yaml
+inventoryservice-config.yaml
+orderservice-config.yaml
