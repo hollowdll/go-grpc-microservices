@@ -16,6 +16,22 @@ const (
 	DefaultApplicationMode string = "development"
 )
 
+var defaultConfigs = []ConfigValue{
+	{
+		key:   GrpcPortConfig,
+		value: DefaultGrpcPort,
+	},
+	{
+		key:   ApplicationModeConfig,
+		value: DefaultApplicationMode,
+	},
+}
+
+type ConfigValue struct {
+	key   string
+	value interface{}
+}
+
 type Config struct {
 	GrpcPort        int
 	ApplicationMode string
@@ -38,6 +54,14 @@ func NewConfig() *Config {
 		log.Printf("failed to load configs from config file: %v", err)
 	}
 
+	for _, cfg := range defaultConfigs {
+		if isDefaultConfig(cfg) {
+			log.Printf("using default value for config %s", cfg.key)
+		} else {
+			log.Printf("overwriting default value for config %s", cfg.key)
+		}
+	}
+
 	return &Config{
 		GrpcPort:        convertPort(viper.GetString(GrpcPortConfig)),
 		ApplicationMode: viper.GetString(ApplicationModeConfig),
@@ -55,4 +79,8 @@ func convertPort(portStr string) int {
 	}
 
 	return port
+}
+
+func isDefaultConfig(cfg ConfigValue) bool {
+	return viper.Get(cfg.key) == cfg.value
 }
