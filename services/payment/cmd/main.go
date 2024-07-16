@@ -9,8 +9,10 @@ import (
 )
 
 func main() {
+	log.Printf("starting payment service ...")
+
 	cfg := config.NewConfig()
-	log.Printf("starting payment service in %s mode ...", cfg.ApplicationMode)
+	log.Printf("application is running in %s mode", cfg.ApplicationMode)
 
 	application := api.NewApplication()
 	grpcAdapter := grpc.NewAdapter(application, cfg)

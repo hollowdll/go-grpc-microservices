@@ -2,13 +2,18 @@ package config
 
 import (
 	"log"
-	"os"
 	"strconv"
+
+	"github.com/spf13/viper"
 )
 
 const (
-	GrpcPortEnv        string = "PAYMENT_GRPC_PORT"
-	ApplicationModeEnv string = "PAYMENT_APPLICATION_MODE"
+	EnvPrefix             string = "PAYMENT"
+	GrpcPortConfig        string = "GRPC_PORT"
+	ApplicationModeConfig string = "APPLICATION_MODE"
+
+	DefaultGrpcPort        int    = 9000
+	DefaultApplicationMode string = "development"
 )
 
 type Config struct {
@@ -17,23 +22,30 @@ type Config struct {
 }
 
 func NewConfig() *Config {
+	log.Printf("loading configurations ...")
+
+	viper.SetConfigName("paymentservice")
+	viper.AddConfigPath(".")
+	viper.SetConfigType("yaml")
+
+	viper.SetDefault(GrpcPortConfig, DefaultGrpcPort)
+	viper.SetDefault(ApplicationModeConfig, DefaultApplicationMode)
+
+	viper.SetEnvPrefix(EnvPrefix)
+	viper.AutomaticEnv()
+
+	if err := viper.ReadInConfig(); err != nil {
+		log.Printf("failed to load configs from config file: %v", err)
+	}
+
 	return &Config{
-		GrpcPort:        convertPort(getEnvValue(GrpcPortEnv)),
-		ApplicationMode: getEnvValue(ApplicationModeEnv),
+		GrpcPort:        convertPort(viper.GetString(GrpcPortConfig)),
+		ApplicationMode: viper.GetString(ApplicationModeConfig),
 	}
 }
 
 func (c *Config) IsDevelopmentMode() bool {
 	return c.ApplicationMode == "development"
-}
-
-func getEnvValue(key string) string {
-	value, ok := os.LookupEnv(key)
-	if !ok {
-		log.Fatalf("%s environment variable is missing", key)
-	}
-
-	return value
 }
 
 func convertPort(portStr string) int {
