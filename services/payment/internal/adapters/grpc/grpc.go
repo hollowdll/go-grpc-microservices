@@ -11,13 +11,15 @@ import (
 	"google.golang.org/grpc/status"
 )
 
+const createPaymentPrefix string = "CreatePayment"
+
 func (a *Adapter) CreatePayment(ctx context.Context, req *paymentpb.CreatePaymentRequest) (res *paymentpb.CreatePaymentResponse, err error) {
-	log.Printf("creating payment: req = %v", req)
+	log.Printf("call RPC %s: request = %v", createPaymentPrefix, req)
 	defer func() {
 		if err != nil {
-			log.Printf("payment failed: req = %v; error = %v", req, err)
+			log.Printf("RPC %s failed: request = %v; error = %v", createPaymentPrefix, req, err)
 		} else {
-			log.Printf("payment success: req = %v; res = %v", req, res)
+			log.Printf("RPC %s success: request = %v; response = %v", createPaymentPrefix, req, res)
 		}
 	}()
 
