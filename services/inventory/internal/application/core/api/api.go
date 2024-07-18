@@ -17,7 +17,19 @@ func NewApplication() *Application {
 }
 
 func (a *Application) GetProductDetails(ctx context.Context, productCodes []string) ([]*domain.Product, error) {
-	// Some business logic to fetch products from database
+	// Some business logic.
 
 	return []*domain.Product{}, nil
+}
+
+func (a *Application) CheckProductStockQuantity(ctx context.Context, products []*domain.ProductQuantity) ([]*domain.ProductStock, error) {
+	// Some business logic.
+
+	return []*domain.ProductStock{}, nil
+}
+
+func (a *Application) ReduceProductStockQuantity(ctx context.Context, products []*domain.ProductQuantity) ([]*domain.ProductStock, error) {
+	// Some business logic.
+
+	return []*domain.ProductStock{}, nil
 }

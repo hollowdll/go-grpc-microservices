@@ -27,3 +27,14 @@ func NewProduct(name string, description string, unitPriceCenters int32) *Produc
 		UpdatedAtMillis: time.Now().UnixMilli(),
 	}
 }
+
+type ProductQuantity struct {
+	ProductCode string `json:"product_code"`
+	Quantity    int32  `json:"quantity"`
+}
+
+type ProductStock struct {
+	ProductCode       string `json:"product_code"`
+	AvailableQuantity int32  `json:"available_quantity"`
+	IsAvailable       bool   `json:"is_available"`
+}
