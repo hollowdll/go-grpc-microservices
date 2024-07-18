@@ -4,16 +4,18 @@ import (
 	"context"
 
 	"github.com/hollowdll/go-grpc-microservices/services/inventory/internal/application/core/domain"
+	"github.com/hollowdll/go-grpc-microservices/services/inventory/internal/ports"
 )
 
 // Application contains core business logic.
 type Application struct {
-	// Here we can add outbound ports for e.g. database
-	// that business logic can call.
+	db ports.DBPort
 }
 
-func NewApplication() *Application {
-	return &Application{}
+func NewApplication(db ports.DBPort) *Application {
+	return &Application{
+		db: db,
+	}
 }
 
 func (a *Application) GetProductDetails(ctx context.Context, productCodes []string) ([]*domain.Product, error) {
