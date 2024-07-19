@@ -65,14 +65,24 @@ func NewInMemoryDBAdapter() *InMemoryDBAdapter {
 	}
 }
 
-func (a *InMemoryDBAdapter) GetProductDetails(ctx context.Context, productCodes []string) ([]*domain.Product, error) {
-	return []*domain.Product{}, errors.New("not implemented")
+func (a *InMemoryDBAdapter) GetProductsByCode(ctx context.Context, productCodes []string) ([]*domain.Product, error) {
+	products := a.db.GetProductsByCode(productCodes)
+
+	return products, nil
 }
 
-func (a *InMemoryDBAdapter) UpdateProductStockQuantities(ctx context.Context, products []*domain.ProductQuantity) ([]*domain.ProductStock, error) {
-	return []*domain.ProductStock{}, errors.New("not implemented")
+func (a *InMemoryDBAdapter) UpdateProductStockQuantities(ctx context.Context, products []*domain.ProductQuantity) error {
+	var updatedQuantities = make(map[string]int32)
+	for _, product := range products {
+		updatedQuantities[product.ProductCode] = product.Quantity
+	}
+	a.db.UpdateProductStockQuantities(updatedQuantities)
+
+	return nil
 }
 
 func (a *InMemoryDBAdapter) SaveProduct(ctx context.Context, product *domain.Product) error {
-	return errors.New("not implemented")
+	a.db.AddProduct(product)
+
+	return nil
 }

@@ -8,6 +8,6 @@ import (
 
 type DBPort interface {
 	GetProductsByCode(ctx context.Context, productCodes []string) ([]*domain.Product, error)
-	UpdateProductStockQuantities(ctx context.Context, products []*domain.ProductQuantity) ([]*domain.ProductStock, error)
+	UpdateProductStockQuantities(ctx context.Context, products []*domain.ProductQuantity) error
 	SaveProduct(ctx context.Context, product *domain.Product) error
 }
