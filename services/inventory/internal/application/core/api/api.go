@@ -2,6 +2,7 @@ package api
 
 import (
 	"context"
+	"errors"
 	"log"
 
 	"github.com/hollowdll/go-grpc-microservices/services/inventory/internal/application/core/domain"
@@ -64,7 +65,7 @@ func (a *Application) CheckProductStockQuantity(ctx context.Context, productQuan
 	return productStocks, nil
 }
 
-func (a *Application) ReduceProductStockQuantity(ctx context.Context, productQuantities []*domain.ProductQuantity) error {
+func (a *Application) ReduceProductStockQuantity(ctx context.Context, productQuantities []*domain.ProductQuantity) ([]*domain.ProductStock, error) {
 	var productCodes = []string{}
 	for _, productQuantity := range productQuantities {
 		productCodes = append(productCodes, productQuantity.ProductCode)
@@ -72,28 +73,44 @@ func (a *Application) ReduceProductStockQuantity(ctx context.Context, productQua
 
 	products, err := a.db.GetProductsByCode(ctx, productCodes)
 	if err != nil {
-		return err
+		return nil, err
 	}
 
+	var productStocks = []*domain.ProductStock{}
 	var updatedQuantities = []*domain.ProductQuantity{}
 	for _, productQuantity := range productQuantities {
 		for _, product := range products {
 			if productQuantity.ProductCode == product.ProductCode {
 				updatedQuantity := product.QuantityInStock - productQuantity.Quantity
+				if updatedQuantity < 0 {
+					return nil, errors.New("negative product stock quantity")
+				}
+
 				updatedQuantities = append(updatedQuantities, &domain.ProductQuantity{
 					ProductCode: product.ProductCode,
 					Quantity:    updatedQuantity,
 				})
+				productStock := &domain.ProductStock{
+					ProductCode:       product.ProductCode,
+					AvailableQuantity: updatedQuantity,
+					IsAvailable:       true,
+				}
+
+				if updatedQuantity == 0 {
+					productStock.IsAvailable = false
+				}
+				productStocks = append(productStocks, productStock)
 			}
 			break
 		}
 	}
+
 	err = a.db.UpdateProductStockQuantities(ctx, updatedQuantities)
 	if err != nil {
-		return err
+		return nil, err
 	}
 
-	return nil
+	return productStocks, nil
 }
 
 // PopulateTestData is used to save some test data to database.
