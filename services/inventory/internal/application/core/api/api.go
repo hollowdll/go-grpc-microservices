@@ -64,10 +64,36 @@ func (a *Application) CheckProductStockQuantity(ctx context.Context, productQuan
 	return productStocks, nil
 }
 
-func (a *Application) ReduceProductStockQuantity(ctx context.Context, productQuantities []*domain.ProductQuantity) ([]*domain.ProductStock, error) {
-	// Some business logic.
+func (a *Application) ReduceProductStockQuantity(ctx context.Context, productQuantities []*domain.ProductQuantity) error {
+	var productCodes = []string{}
+	for _, productQuantity := range productQuantities {
+		productCodes = append(productCodes, productQuantity.ProductCode)
+	}
 
-	return []*domain.ProductStock{}, nil
+	products, err := a.db.GetProductsByCode(ctx, productCodes)
+	if err != nil {
+		return err
+	}
+
+	var updatedQuantities = []*domain.ProductQuantity{}
+	for _, productQuantity := range productQuantities {
+		for _, product := range products {
+			if productQuantity.ProductCode == product.ProductCode {
+				updatedQuantity := product.QuantityInStock - productQuantity.Quantity
+				updatedQuantities = append(updatedQuantities, &domain.ProductQuantity{
+					ProductCode: product.ProductCode,
+					Quantity:    updatedQuantity,
+				})
+			}
+			break
+		}
+	}
+	err = a.db.UpdateProductStockQuantities(ctx, updatedQuantities)
+	if err != nil {
+		return err
+	}
+
+	return nil
 }
 
 // PopulateTestData is used to save some test data to database.
