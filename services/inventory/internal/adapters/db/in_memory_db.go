@@ -22,11 +22,13 @@ func NewInMemoryDB() *InMemoryDB {
 	}
 }
 
-func (db *InMemoryDB) AddProduct(product *domain.Product) {
+func (db *InMemoryDB) AddProducts(products []*domain.Product) {
 	db.mu.Lock()
 	defer db.mu.Unlock()
 
-	db.products[product.ProductCode] = product
+	for _, product := range products {
+		db.products[product.ProductCode] = product
+	}
 }
 
 func (db *InMemoryDB) GetProductsByCode(productCodes []string) []*domain.Product {
@@ -81,8 +83,8 @@ func (a *InMemoryDBAdapter) UpdateProductStockQuantities(ctx context.Context, pr
 	return nil
 }
 
-func (a *InMemoryDBAdapter) SaveProduct(ctx context.Context, product *domain.Product) error {
-	a.db.AddProduct(product)
+func (a *InMemoryDBAdapter) SaveProduct(ctx context.Context, products []*domain.Product) error {
+	a.db.AddProducts(products)
 
 	return nil
 }

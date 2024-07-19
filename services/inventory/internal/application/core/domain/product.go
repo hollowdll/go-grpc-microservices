@@ -16,13 +16,13 @@ type Product struct {
 	UpdatedAtMillis int64  `json:"updated_at_millis"`
 }
 
-func NewProduct(name string, description string, unitPriceCenters int32) *Product {
+func NewProduct(name string, description string, unitPriceCenters int32, quantityInStock int32) *Product {
 	return &Product{
 		ProductCode:     uuid.NewString(),
 		Name:            name,
 		Description:     description,
 		UnitPriceCents:  unitPriceCenters,
-		QuantityInStock: 0,
+		QuantityInStock: quantityInStock,
 		CreatedAtMillis: time.Now().UnixMilli(),
 		UpdatedAtMillis: time.Now().UnixMilli(),
 	}
