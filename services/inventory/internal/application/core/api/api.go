@@ -20,18 +20,51 @@ func NewApplication(db ports.DBPort) *Application {
 }
 
 func (a *Application) GetProductDetails(ctx context.Context, productCodes []string) ([]*domain.Product, error) {
-	// Some business logic.
+	products, err := a.db.GetProductsByCode(ctx, productCodes)
+	if err != nil {
+		return nil, err
+	}
 
-	return []*domain.Product{}, nil
+	return products, nil
 }
 
-func (a *Application) CheckProductStockQuantity(ctx context.Context, products []*domain.ProductQuantity) ([]*domain.ProductStock, error) {
-	// Some business logic.
+func (a *Application) CheckProductStockQuantity(ctx context.Context, productQuantities []*domain.ProductQuantity) ([]*domain.ProductStock, error) {
+	var productCodes = []string{}
+	for _, productQuantity := range productQuantities {
+		productCodes = append(productCodes, productQuantity.ProductCode)
+	}
 
-	return []*domain.ProductStock{}, nil
+	products, err := a.db.GetProductsByCode(ctx, productCodes)
+	if err != nil {
+		return nil, err
+	}
+
+	var productStocks = []*domain.ProductStock{}
+	for _, productQuantity := range productQuantities {
+		for _, product := range products {
+			if productQuantity.ProductCode == product.ProductCode {
+				if productQuantity.Quantity <= product.QuantityInStock {
+					productStocks = append(productStocks, &domain.ProductStock{
+						ProductCode:       product.ProductCode,
+						AvailableQuantity: product.QuantityInStock,
+						IsAvailable:       true,
+					})
+				} else {
+					productStocks = append(productStocks, &domain.ProductStock{
+						ProductCode:       product.ProductCode,
+						AvailableQuantity: product.QuantityInStock,
+						IsAvailable:       false,
+					})
+				}
+				break
+			}
+		}
+	}
+
+	return productStocks, nil
 }
 
-func (a *Application) ReduceProductStockQuantity(ctx context.Context, products []*domain.ProductQuantity) ([]*domain.ProductStock, error) {
+func (a *Application) ReduceProductStockQuantity(ctx context.Context, productQuantities []*domain.ProductQuantity) ([]*domain.ProductStock, error) {
 	// Some business logic.
 
 	return []*domain.ProductStock{}, nil
