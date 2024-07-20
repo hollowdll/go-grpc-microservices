@@ -9,7 +9,7 @@ import (
 )
 
 func main() {
-	log.Printf("starting payment service ...")
+	log.Println("starting payment service ...")
 
 	cfg := config.NewConfig()
 	log.Printf("application is running in %s mode", cfg.ApplicationMode)

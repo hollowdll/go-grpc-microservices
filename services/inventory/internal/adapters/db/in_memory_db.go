@@ -82,7 +82,7 @@ func (a *InMemoryDBAdapter) UpdateProductStockQuantities(ctx context.Context, pr
 	return nil
 }
 
-func (a *InMemoryDBAdapter) SaveProduct(ctx context.Context, products []*domain.Product) error {
+func (a *InMemoryDBAdapter) SaveProducts(ctx context.Context, products []*domain.Product) error {
 	a.db.AddProducts(products)
 
 	return nil
