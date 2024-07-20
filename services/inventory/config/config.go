@@ -8,11 +8,11 @@ import (
 )
 
 const (
-	EnvPrefix             string = "PAYMENT"
+	EnvPrefix             string = "INVENTORY"
 	GrpcPortConfig        string = "GRPC_PORT"
 	ApplicationModeConfig string = "APPLICATION_MODE"
 
-	DefaultGrpcPort        int    = 9000
+	DefaultGrpcPort        int    = 9001
 	DefaultApplicationMode string = "development"
 )
 
@@ -29,7 +29,7 @@ type Config struct {
 func NewConfig() *Config {
 	log.Printf("loading configurations ...")
 
-	viper.SetConfigName("paymentservice-config")
+	viper.SetConfigName("inventoryservice-config")
 	viper.AddConfigPath(".")
 	viper.SetConfigType("yaml")
 
