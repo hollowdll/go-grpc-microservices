@@ -2,7 +2,6 @@ package db
 
 import (
 	"context"
-	"errors"
 	"sync"
 
 	"github.com/hollowdll/go-grpc-microservices/services/inventory/internal/application/core/domain"
