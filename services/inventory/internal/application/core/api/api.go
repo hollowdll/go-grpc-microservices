@@ -124,7 +124,10 @@ func (a *Application) PopulateTestData(ctx context.Context) error {
 		domain.NewProduct("Chair", "Office chair.", 15000, 0),
 	}
 
-	log.Printf("saving the following test data to database: products = %v", products)
+	log.Println("saving test data to database ...")
+	for _, product := range products {
+		log.Printf("product = %v", product)
+	}
 
 	err := a.db.SaveProducts(ctx, products)
 	if err != nil {
