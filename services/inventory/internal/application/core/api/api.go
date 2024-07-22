@@ -83,7 +83,7 @@ func (a *Application) ReduceProductStockQuantity(ctx context.Context, productQua
 			if productQuantity.ProductCode == product.ProductCode {
 				updatedQuantity := product.QuantityInStock - productQuantity.Quantity
 				if updatedQuantity < 0 {
-					return nil, errors.New("negative product stock quantity")
+					return nil, errors.New("operation results in negative product stock quantity")
 				}
 
 				updatedQuantities = append(updatedQuantities, &domain.ProductQuantity{
@@ -100,8 +100,9 @@ func (a *Application) ReduceProductStockQuantity(ctx context.Context, productQua
 					productStock.IsAvailable = false
 				}
 				productStocks = append(productStocks, productStock)
+
+				break
 			}
-			break
 		}
 	}
 
