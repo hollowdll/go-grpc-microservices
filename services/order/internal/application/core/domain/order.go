@@ -44,3 +44,14 @@ func NewOrder(customerID string, orderItems []OrderItem) (*Order, error) {
 		UpdatedAtMillis: time.Now().UnixMilli(),
 	}, nil
 }
+
+type ProductPrice struct {
+	ProductCode    string `json:"product_code"`
+	UnitPriceCents int32  `json:"unit_price_cents"`
+}
+
+type ProductStock struct {
+	ProductCode       string `json:"product_code"`
+	AvailableQuantity int32  `json:"available_quantity"`
+	IsAvailable       bool   `json:"is_available"`
+}
