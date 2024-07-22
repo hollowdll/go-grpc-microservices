@@ -63,6 +63,9 @@ func (a *Adapter) CheckProductStockQuantity(ctx context.Context, req *inventoryp
 		})
 	}
 	results, err := a.api.CheckProductStockQuantity(ctx, productQuantities)
+	if err != nil {
+		return nil, status.Error(codes.InvalidArgument, fmt.Sprintf("failed to check stock quantities of the requested products: %v", err))
+	}
 
 	var productStocks = []*inventorypb.ProductStock{}
 	for _, result := range results {
@@ -94,6 +97,9 @@ func (a *Adapter) ReduceProductStockQuantity(ctx context.Context, req *inventory
 		})
 	}
 	results, err := a.api.ReduceProductStockQuantity(ctx, productQuantities)
+	if err != nil {
+		return nil, status.Error(codes.Internal, fmt.Sprintf("failed to reduce stock quantities of the requested products: %v", err))
+	}
 
 	var productStocks = []*inventorypb.ProductStock{}
 	for _, result := range results {
