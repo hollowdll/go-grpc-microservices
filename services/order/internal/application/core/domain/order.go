@@ -21,15 +21,15 @@ type OrderItem struct {
 }
 
 type Order struct {
-	ID              string      `json:"id"`
-	CustomerID      string      `json:"customer_id"`
-	Status          OrderStatus `json:"status"`
-	OrderItems      []OrderItem `json:"order_items"`
-	CreatedAtMillis int64       `json:"created_at_millis"`
-	UpdatedAtMillis int64       `json:"updated_at_millis"`
+	ID              string       `json:"id"`
+	CustomerID      string       `json:"customer_id"`
+	Status          OrderStatus  `json:"status"`
+	OrderItems      []*OrderItem `json:"order_items"`
+	CreatedAtMillis int64        `json:"created_at_millis"`
+	UpdatedAtMillis int64        `json:"updated_at_millis"`
 }
 
-func NewOrder(customerID string, orderItems []OrderItem) (*Order, error) {
+func NewOrder(customerID string, orderItems []*OrderItem) (*Order, error) {
 	id, err := uuid.NewV7()
 	if err != nil {
 		return nil, err
