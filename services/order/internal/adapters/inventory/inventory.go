@@ -1,10 +1,12 @@
 package inventory
 
 import (
+	"context"
 	"fmt"
 	"log"
 
 	"github.com/hollowdll/go-grpc-microservices/services/order/config"
+	"github.com/hollowdll/go-grpc-microservices/services/order/internal/application/core/domain"
 	"github.com/hollowdll/grpc-microservices-proto/gen/golang/inventorypb"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials/insecure"
@@ -35,9 +37,22 @@ func NewAdapter(cfg *config.Config) (*Adapter, error) {
 	}, nil
 }
 
-func (a *Adapter) CloseConnection() error {
+func (a *Adapter) CloseConnection() {
 	if a.conn != nil {
-		return a.conn.Close()
+		if err := a.conn.Close(); err != nil {
+			log.Printf("failed to close gRPC client connection to inventory service: %v", err)
+		}
 	}
+}
+
+func (a *Adapter) GetProductPrices(ctx context.Context, productCodes []string) ([]*domain.ProductPrice, error) {
+	return nil, nil
+}
+
+func (a *Adapter) CheckProductStockQuantities(ctx context.Context, orderItems []*domain.OrderItem) ([]*domain.ProductStock, error) {
+	return nil, nil
+}
+
+func (a *Adapter) ReduceProductStockQuantities(ctx context.Context, orderItems []*domain.OrderItem) error {
 	return nil
 }

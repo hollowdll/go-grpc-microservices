@@ -20,11 +20,13 @@ func main() {
 	if err != nil {
 		log.Fatalf("failed to initialize gRPC client for inventory service: %v", err)
 	}
+	defer inventoryAdapter.CloseConnection()
 
 	paymentAdapter, err := payment.NewAdapter(cfg)
 	if err != nil {
 		log.Fatalf("failed to initialize gRPC client for payment service: %v", err)
 	}
+	defer paymentAdapter.CloseConnection()
 
 	application := api.NewApplication(inventoryAdapter, paymentAdapter)
 }
