@@ -6,7 +6,9 @@ require (
 	github.com/fsnotify/fsnotify v1.7.0 // indirect
 	github.com/google/uuid v1.6.0 // indirect
 	github.com/hashicorp/hcl v1.0.0 // indirect
+	github.com/hollowdll/grpc-microservices-proto/gen/golang/inventorypb v1.0.0 // indirect
 	github.com/hollowdll/grpc-microservices-proto/gen/golang/orderpb v1.0.0 // indirect
+	github.com/hollowdll/grpc-microservices-proto/gen/golang/paymentpb v1.0.0 // indirect
 	github.com/magiconair/properties v1.8.7 // indirect
 	github.com/mitchellh/mapstructure v1.5.0 // indirect
 	github.com/pelletier/go-toml/v2 v2.2.2 // indirect
