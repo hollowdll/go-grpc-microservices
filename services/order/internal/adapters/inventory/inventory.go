@@ -46,7 +46,20 @@ func (a *Adapter) CloseConnection() {
 }
 
 func (a *Adapter) GetProductPrices(ctx context.Context, productCodes []string) ([]*domain.ProductPrice, error) {
-	return nil, nil
+	products, err := a.inventory.GetProductDetails(ctx, &inventorypb.GetProductDetailsRequest{ProductCodes: productCodes})
+	if err != nil {
+		return nil, err
+	}
+
+	var productPrices = []*domain.ProductPrice{}
+	for _, product := range products.ProductDetails {
+		productPrices = append(productPrices, &domain.ProductPrice{
+			ProductCode:    product.ProductCode,
+			UnitPriceCents: product.UnitPriceCents,
+		})
+	}
+
+	return productPrices, nil
 }
 
 func (a *Adapter) CheckProductStockQuantities(ctx context.Context, orderItems []*domain.OrderItem) ([]*domain.ProductStock, error) {
