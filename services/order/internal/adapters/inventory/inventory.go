@@ -93,5 +93,17 @@ func (a *Adapter) CheckProductStockQuantities(ctx context.Context, orderItems []
 }
 
 func (a *Adapter) ReduceProductStockQuantities(ctx context.Context, orderItems []*domain.OrderItem) error {
-	return nil
+	var productQuantities = []*inventorypb.ProductQuantity{}
+	for _, orderItem := range orderItems {
+		productQuantities = append(productQuantities, &inventorypb.ProductQuantity{
+			ProductCode: orderItem.ProductCode,
+			Quantity:    orderItem.Quantity,
+		})
+	}
+
+	_, err := a.inventory.ReduceProductStockQuantity(ctx, &inventorypb.ReduceProductStockQuantityRequest{
+		Products: productQuantities,
+	})
+
+	return err
 }
