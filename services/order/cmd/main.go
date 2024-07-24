@@ -4,6 +4,7 @@ import (
 	"log"
 
 	"github.com/hollowdll/go-grpc-microservices/services/order/config"
+	"github.com/hollowdll/go-grpc-microservices/services/order/internal/adapters/grpc"
 	"github.com/hollowdll/go-grpc-microservices/services/order/internal/adapters/inventory"
 	"github.com/hollowdll/go-grpc-microservices/services/order/internal/adapters/payment"
 	"github.com/hollowdll/go-grpc-microservices/services/order/internal/application/core/api"
@@ -29,4 +30,6 @@ func main() {
 	defer paymentAdapter.CloseConnection()
 
 	application := api.NewApplication(inventoryAdapter, paymentAdapter)
+	grpcAdapter := grpc.NewAdapter(application, cfg)
+	grpcAdapter.Run()
 }
