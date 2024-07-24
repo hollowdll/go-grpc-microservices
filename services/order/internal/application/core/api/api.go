@@ -2,8 +2,8 @@ package api
 
 import (
 	"context"
-	"errors"
 
+	ordererrors "github.com/hollowdll/go-grpc-microservices/services/order/errors"
 	"github.com/hollowdll/go-grpc-microservices/services/order/internal/application/core/domain"
 	"github.com/hollowdll/go-grpc-microservices/services/order/internal/ports"
 )
@@ -32,17 +32,17 @@ func (a *Application) CreateOrder(ctx context.Context, order *domain.Order) (*do
 
 	productPrices, err := a.inventory.GetProductPrices(ctx, productCodes)
 	if err != nil {
-		return nil, err
+		return nil, ordererrors.ErrGetProductPrices
 	}
 
 	// 2. check product stock quantities
 	productStocks, err := a.inventory.CheckProductStockQuantities(ctx, order.OrderItems)
 	if err != nil {
-		return nil, err
+		return nil, ordererrors.ErrCheckProductStockQuantities
 	}
 	for _, productStock := range productStocks {
 		if !productStock.IsAvailable {
-			return nil, errors.New("not enough ordered products in stock")
+			return nil, ordererrors.ErrNotEnoughProducts
 		}
 	}
 
@@ -50,13 +50,13 @@ func (a *Application) CreateOrder(ctx context.Context, order *domain.Order) (*do
 	totalPriceCents := sumPrices(productPrices, order.OrderItems)
 	err = a.payment.CreatePayment(ctx, order, totalPriceCents)
 	if err != nil {
-		return nil, err
+		return nil, ordererrors.ErrCreatePayment
 	}
 
 	// 4. reduce product stock quantity
 	err = a.inventory.ReduceProductStockQuantities(ctx, order.OrderItems)
 	if err != nil {
-		return nil, err
+		return nil, ordererrors.ErrReduceProductStockQuantities
 	}
 
 	return order, nil

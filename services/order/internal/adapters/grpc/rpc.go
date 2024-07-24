@@ -2,6 +2,7 @@ package grpc
 
 import (
 	"context"
+	"fmt"
 	"log"
 	"time"
 
@@ -26,6 +27,7 @@ func (a *Adapter) CreateOrder(ctx context.Context, req *orderpb.CreateOrderReque
 		}
 	}()
 
+	// use timeout so the order operation won't wait forever
 	ctx, cancel := context.WithTimeout(ctx, createOrderTimeout)
 	defer cancel()
 
@@ -38,12 +40,13 @@ func (a *Adapter) CreateOrder(ctx context.Context, req *orderpb.CreateOrderReque
 	}
 	newOrder, err := domain.NewOrder(req.CustomerId, orderItems)
 	if err != nil {
-		return nil, status.Error(codes.Internal, err.Error())
+		log.Printf("RPC %s: failed to create new order: %v", createOrderName, err)
+		return nil, status.Error(codes.Internal, "order creation failed")
 	}
 
 	result, err := a.api.CreateOrder(ctx, newOrder)
 	if err != nil {
-		return nil, err
+		return nil, status.Error(codes.Internal, fmt.Sprintf("order creation failed: %v", err))
 	}
 
 	return &orderpb.CreateOrderResponse{OrderId: result.ID}, nil
