@@ -46,13 +46,15 @@ func (a *Adapter) CloseConnection() {
 }
 
 func (a *Adapter) GetProductPrices(ctx context.Context, productCodes []string) ([]*domain.ProductPrice, error) {
-	products, err := a.inventory.GetProductDetails(ctx, &inventorypb.GetProductDetailsRequest{ProductCodes: productCodes})
+	response, err := a.inventory.GetProductDetails(ctx, &inventorypb.GetProductDetailsRequest{
+		ProductCodes: productCodes,
+	})
 	if err != nil {
 		return nil, err
 	}
 
 	var productPrices = []*domain.ProductPrice{}
-	for _, product := range products.ProductDetails {
+	for _, product := range response.ProductDetails {
 		productPrices = append(productPrices, &domain.ProductPrice{
 			ProductCode:    product.ProductCode,
 			UnitPriceCents: product.UnitPriceCents,
@@ -63,7 +65,31 @@ func (a *Adapter) GetProductPrices(ctx context.Context, productCodes []string) (
 }
 
 func (a *Adapter) CheckProductStockQuantities(ctx context.Context, orderItems []*domain.OrderItem) ([]*domain.ProductStock, error) {
-	return nil, nil
+	var productQuantities = []*inventorypb.ProductQuantity{}
+	for _, orderItem := range orderItems {
+		productQuantities = append(productQuantities, &inventorypb.ProductQuantity{
+			ProductCode: orderItem.ProductCode,
+			Quantity:    orderItem.Quantity,
+		})
+	}
+
+	response, err := a.inventory.CheckProductStockQuantity(ctx, &inventorypb.CheckProductStockQuantityRequest{
+		Products: productQuantities,
+	})
+	if err != nil {
+		return nil, err
+	}
+
+	var productStocks = []*domain.ProductStock{}
+	for _, product := range response.Products {
+		productStocks = append(productStocks, &domain.ProductStock{
+			ProductCode:       product.ProductCode,
+			AvailableQuantity: product.AvailableQuantity,
+			IsAvailable:       product.IsAvailable,
+		})
+	}
+
+	return productStocks, nil
 }
 
 func (a *Adapter) ReduceProductStockQuantities(ctx context.Context, orderItems []*domain.OrderItem) error {
