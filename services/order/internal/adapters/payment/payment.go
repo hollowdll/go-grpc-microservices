@@ -46,5 +46,10 @@ func (a *Adapter) CloseConnection() {
 }
 
 func (a *Adapter) CreatePayment(ctx context.Context, order *domain.Order, totalPriceCents int32) error {
-	return nil
+	_, err := a.payment.CreatePayment(ctx, &paymentpb.CreatePaymentRequest{
+		CustomerId:      order.CustomerID,
+		OrderId:         order.ID,
+		TotalPriceCents: totalPriceCents,
+	})
+	return err
 }
