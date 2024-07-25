@@ -115,22 +115,52 @@ func (a *Application) ReduceProductStockQuantity(ctx context.Context, productQua
 }
 
 // PopulateTestData is used to save some test data to database.
+// Here we use fixed UUIDs so it is easier to manually test the RPCs.
 func (a *Application) PopulateTestData(ctx context.Context) error {
-	products := []*domain.Product{
-		domain.NewProduct("Bike", "Mountain bike.", 80000, 5),
-		domain.NewProduct("Laptop", "Business Laptop.", 150000, 10),
-		domain.NewProduct("Cable", "HDMI cable.", 1200, 12),
-		domain.NewProduct("Keyboard", "Mechanical keyboard.", 8000, 8),
-		domain.NewProduct("Monitor", "OLED monitor.", 11000, 3),
-		domain.NewProduct("Chair", "Office chair.", 15000, 0),
+	log.Println("creating test data ...")
+
+	var products = []*domain.Product{}
+	product, err := domain.NewProduct("Laptop", "Business Laptop.", 150000, 10)
+	if err != nil {
+		return err
 	}
+	product.ProductCode = "0190e8c4-258e-767f-94a7-b5183aea900f"
+	products = append(products, product)
+
+	product, err = domain.NewProduct("Cable", "HDMI cable.", 1200, 12)
+	if err != nil {
+		return err
+	}
+	product.ProductCode = "0190e8c4-258e-7688-a8d3-6bec3ec39771"
+	products = append(products, product)
+
+	product, err = domain.NewProduct("Keyboard", "Mechanical keyboard.", 8000, 8)
+	if err != nil {
+		return err
+	}
+	product.ProductCode = "0190e8c4-258e-768e-bf5d-d8db757fb86f"
+	products = append(products, product)
+
+	product, err = domain.NewProduct("Monitor", "OLED monitor.", 11000, 3)
+	if err != nil {
+		return err
+	}
+	product.ProductCode = "0190e8c4-258e-7693-ab70-c5f2da6739db"
+	products = append(products, product)
+
+	product, err = domain.NewProduct("Chair", "Office chair.", 15000, 0)
+	if err != nil {
+		return err
+	}
+	product.ProductCode = "0190e8c4-258e-7697-8bde-98508cde1a97"
+	products = append(products, product)
 
 	log.Println("saving test data to database ...")
 	for _, product := range products {
 		log.Printf("product = %v", product)
 	}
 
-	err := a.db.SaveProducts(ctx, products)
+	err = a.db.SaveProducts(ctx, products)
 	if err != nil {
 		return err
 	}

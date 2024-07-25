@@ -16,16 +16,21 @@ type Product struct {
 	UpdatedAtMillis int64  `json:"updated_at_millis"`
 }
 
-func NewProduct(name string, description string, unitPriceCenters int32, quantityInStock int32) *Product {
+func NewProduct(name string, description string, unitPriceCenters int32, quantityInStock int32) (*Product, error) {
+	id, err := uuid.NewV7()
+	if err != nil {
+		return nil, err
+	}
+
 	return &Product{
-		ProductCode:     uuid.NewString(),
+		ProductCode:     id.String(),
 		Name:            name,
 		Description:     description,
 		UnitPriceCents:  unitPriceCenters,
 		QuantityInStock: quantityInStock,
 		CreatedAtMillis: time.Now().UnixMilli(),
 		UpdatedAtMillis: time.Now().UnixMilli(),
-	}
+	}, nil
 }
 
 type ProductQuantity struct {
