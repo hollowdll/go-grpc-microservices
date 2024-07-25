@@ -1,0 +1,9 @@
+{
+  "customer_id": "customer-123",
+  "order_items": [
+    {
+      "product_code": "0190e8c4-258e-7697-8bde-98508cde1a97",
+      "quantity": 5
+    }
+  ]
+}

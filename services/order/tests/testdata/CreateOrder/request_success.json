@@ -1,0 +1,13 @@
+{
+  "customer_id": "customer-123",
+  "order_items": [
+    {
+      "product_code": "0190e8c4-258e-767f-94a7-b5183aea900f",
+      "quantity": 2
+    },
+    {
+      "product_code": "0190e8c4-258e-7693-ab70-c5f2da6739db",
+      "quantity": 1
+    }
+  ]
+}
