@@ -22,7 +22,7 @@ func NewAdapter(cfg *config.Config) (*Adapter, error) {
 
 	var opts []grpc.DialOption
 	opts = append(opts, grpc.WithTransportCredentials(insecure.NewCredentials()))
-	address := fmt.Sprintf("%s:%d", cfg.PaymentServiceHost, cfg.PaymentServicePort)
+	address := fmt.Sprintf("%s:%d", cfg.PaymentServiceHost, cfg.PaymentServiceGrpcPort)
 
 	log.Printf("using endpoint %s", address)
 	conn, err := grpc.NewClient(address, opts...)

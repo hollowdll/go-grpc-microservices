@@ -8,38 +8,38 @@ import (
 )
 
 const (
-	EnvPrefix                  string = "ORDER"
-	GrpcPortConfig             string = "GRPC_PORT"
-	ApplicationModeConfig      string = "APPLICATION_MODE"
-	InventoryServiceHostConfig string = "INVENTORY_SERVICE_HOST"
-	InventoryServicePortConfig string = "INVENTORY_SERVICE_PORT"
-	PaymentServiceHostConfig   string = "PAYMENT_SERVICE_HOST"
-	PaymentServicePortConfig   string = "PAYMENT_SERVICE_PORT"
+	EnvPrefix                      string = "ORDER"
+	GrpcPortConfig                 string = "GRPC_PORT"
+	ApplicationModeConfig          string = "APPLICATION_MODE"
+	InventoryServiceHostConfig     string = "INVENTORY_SERVICE_HOST"
+	InventoryServiceGrpcPortConfig string = "INVENTORY_SERVICE_GRPC_PORT"
+	PaymentServiceHostConfig       string = "PAYMENT_SERVICE_HOST"
+	PaymentServiceGrpcPortConfig   string = "PAYMENT_SERVICE_GRPC_PORT"
 
-	DefaultGrpcPort             int    = 9002
-	DefaultApplicationMode      string = "development"
-	DefaultInventoryServiceHost string = "localhost"
-	DefaultInventoryServicePort int    = 9001
-	DefaultPaymentServiceHost   string = "localhost"
-	DefaultPaymentServicePort   int    = 9000
+	DefaultGrpcPort                 int    = 9002
+	DefaultApplicationMode          string = "development"
+	DefaultInventoryServiceHost     string = "localhost"
+	DefaultInventoryServiceGrpcPort int    = 9001
+	DefaultPaymentServiceHost       string = "localhost"
+	DefaultPaymentServiceGrpcPort   int    = 9000
 )
 
 var defaultConfigs = map[string]interface{}{
-	GrpcPortConfig:             DefaultGrpcPort,
-	ApplicationModeConfig:      DefaultApplicationMode,
-	InventoryServiceHostConfig: DefaultInventoryServiceHost,
-	InventoryServicePortConfig: DefaultInventoryServicePort,
-	PaymentServiceHostConfig:   DefaultPaymentServiceHost,
-	PaymentServicePortConfig:   DefaultPaymentServicePort,
+	GrpcPortConfig:                 DefaultGrpcPort,
+	ApplicationModeConfig:          DefaultApplicationMode,
+	InventoryServiceHostConfig:     DefaultInventoryServiceHost,
+	InventoryServiceGrpcPortConfig: DefaultInventoryServiceGrpcPort,
+	PaymentServiceHostConfig:       DefaultPaymentServiceHost,
+	PaymentServiceGrpcPortConfig:   DefaultPaymentServiceGrpcPort,
 }
 
 type Config struct {
-	GrpcPort             int
-	ApplicationMode      string
-	InventoryServiceHost string
-	InventoryServicePort int
-	PaymentServiceHost   string
-	PaymentServicePort   int
+	GrpcPort                 int
+	ApplicationMode          string
+	InventoryServiceHost     string
+	InventoryServiceGrpcPort int
+	PaymentServiceHost       string
+	PaymentServiceGrpcPort   int
 }
 
 func NewConfig() *Config {
@@ -57,12 +57,12 @@ func NewConfig() *Config {
 	}
 
 	return &Config{
-		GrpcPort:             convertPort(viper.GetString(GrpcPortConfig)),
-		ApplicationMode:      viper.GetString(ApplicationModeConfig),
-		InventoryServiceHost: viper.GetString(InventoryServiceHostConfig),
-		InventoryServicePort: convertPort(viper.GetString(InventoryServicePortConfig)),
-		PaymentServiceHost:   viper.GetString(PaymentServiceHostConfig),
-		PaymentServicePort:   convertPort(viper.GetString(PaymentServicePortConfig)),
+		GrpcPort:                 convertPort(viper.GetString(GrpcPortConfig)),
+		ApplicationMode:          viper.GetString(ApplicationModeConfig),
+		InventoryServiceHost:     viper.GetString(InventoryServiceHostConfig),
+		InventoryServiceGrpcPort: convertPort(viper.GetString(InventoryServiceGrpcPortConfig)),
+		PaymentServiceHost:       viper.GetString(PaymentServiceHostConfig),
+		PaymentServiceGrpcPort:   convertPort(viper.GetString(PaymentServiceGrpcPortConfig)),
 	}
 }
 
@@ -74,9 +74,9 @@ func InitConfig() {
 	viper.SetDefault(GrpcPortConfig, DefaultGrpcPort)
 	viper.SetDefault(ApplicationModeConfig, DefaultApplicationMode)
 	viper.SetDefault(InventoryServiceHostConfig, DefaultInventoryServiceHost)
-	viper.SetDefault(InventoryServicePortConfig, DefaultInventoryServicePort)
+	viper.SetDefault(InventoryServiceGrpcPortConfig, DefaultInventoryServiceGrpcPort)
 	viper.SetDefault(PaymentServiceHostConfig, DefaultPaymentServiceHost)
-	viper.SetDefault(PaymentServicePortConfig, DefaultPaymentServicePort)
+	viper.SetDefault(PaymentServiceGrpcPortConfig, DefaultPaymentServiceGrpcPort)
 
 	viper.SetEnvPrefix(EnvPrefix)
 	viper.AutomaticEnv()
