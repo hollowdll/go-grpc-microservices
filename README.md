@@ -48,14 +48,14 @@ After this you should see some output logs telling the service is starting if no
 
 # How to configure the microservices
 
-By default, the services use default configurations. However, you can change these defaults with configuration files or with environment variables, as the [12-factor app](https://12factor.net/) methodology suggests.
+By default, the services use default configurations. However, you can change these defaults with configuration files or environment variables, as the [12-factor app](https://12factor.net/) methodology suggests.
 
 ## About the configuration files
 
 - The configuration file needs to be in the same directory where you are running the service
 - The configuration files use YAML format
-- The configuration files are not created automatically.
-- Environment variables override configurations in the configuration files.
+- The configuration files are not created automatically
+- Environment variables override configurations in the configuration files
 
 ## Configure payment service
 
@@ -73,5 +73,47 @@ Name in config file | Environment variable     | Default value | Description
 ------------------- | ------------------------ | ------------- | -----------
 GRPC_PORT           | PAYMENT_GRPC_PORT        | 9000          | gRPC server port number.
 APPLICATION_MODE    | PAYMENT_APPLICATION_MODE | development   | Mode the service runs in. e.g. development, staging, production.
+
+## Configure inventory service
+
+Configuration file: inventory-config.yaml
+
+Configuration file template with default values:
+```yaml
+GRPC_PORT: 9001
+APPLICATION_MODE: development
+```
+
+The following table describes the configurations for this service:
+
+Name in config file | Environment variable     | Default value | Description
+------------------- | ------------------------ | ------------- | -----------
+GRPC_PORT           | INVENTORY_GRPC_PORT        | 9001          | gRPC server port number.
+APPLICATION_MODE    | INVENTORY_APPLICATION_MODE | development   | Mode the service runs in. e.g. development, staging, production.
+
+## Configure order service
+
+Configuration file: order-config.yaml
+
+Configuration file template with default values:
+```yaml
+GRPC_PORT: 9002
+APPLICATION_MODE: development
+INVENTORY_SERVICE_HOST: localhost
+INVENTORY_SERVICE_PORT: 9001
+PAYMENT_SERVICE_HOST: localhost
+PAYMENT_SERVICE_PORT: 9000
+```
+
+The following table describes the configurations for this service:
+
+Name in config file    | Environment variable         | Default value | Description
+---------------------- | ---------------------------- | ------------- | -----------
+GRPC_PORT              | ORDER_GRPC_PORT              | 9002          | gRPC server port number.
+APPLICATION_MODE       | ORDER_APPLICATION_MODE       | development   | Mode the service runs in. e.g. development, staging, production.
+INVENTORY_SERVICE_HOST | ORDER_INVENTORY_SERVICE_HOST | localhost     | Host or IP address of the inventory service.
+INVENTORY_SERVICE_PORT | ORDER_INVENTORY_SERVICE_PORT | 9001          | Port number of the inventory service's gRPC server.
+PAYMENT_SERVICE_HOST   | ORDER_PAYMENT_SERVICE_HOST   | localhost     | Host or IP address of the payment service.
+PAYMENT_SERVICE_PORT   | ORDER_PAYMENT_SERVICE_PORT   | 9000          | Port number of the payment service's gRPC server.
 
 
