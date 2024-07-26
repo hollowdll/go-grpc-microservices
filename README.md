@@ -100,20 +100,20 @@ Configuration file template with default values:
 GRPC_PORT: 9002
 APPLICATION_MODE: development
 INVENTORY_SERVICE_HOST: localhost
-INVENTORY_SERVICE_PORT: 9001
+INVENTORY_SERVICE_GRPC_PORT: 9001
 PAYMENT_SERVICE_HOST: localhost
-PAYMENT_SERVICE_PORT: 9000
+PAYMENT_SERVICE_GRPC_PORT: 9000
 ```
 
 The following table describes the configurations for this service:
 
-Name in config file    | Environment variable         | Default value | Description
----------------------- | ---------------------------- | ------------- | -----------
-GRPC_PORT              | ORDER_GRPC_PORT              | 9002          | gRPC server port number.
-APPLICATION_MODE       | ORDER_APPLICATION_MODE       | development   | Mode the service runs in. e.g. development, staging, production.
-INVENTORY_SERVICE_HOST | ORDER_INVENTORY_SERVICE_HOST | localhost     | Host or IP address of the inventory service.
-INVENTORY_SERVICE_PORT | ORDER_INVENTORY_SERVICE_PORT | 9001          | Port number of the inventory service's gRPC server.
-PAYMENT_SERVICE_HOST   | ORDER_PAYMENT_SERVICE_HOST   | localhost     | Host or IP address of the payment service.
-PAYMENT_SERVICE_PORT   | ORDER_PAYMENT_SERVICE_PORT   | 9000          | Port number of the payment service's gRPC server.
+Name in config file         | Environment variable              | Default value | Description
+--------------------------- | --------------------------------- | ------------- | -----------
+GRPC_PORT                   | ORDER_GRPC_PORT                   | 9002          | gRPC server port number.
+APPLICATION_MODE            | ORDER_APPLICATION_MODE            | development   | Mode the service runs in. e.g. development, staging, production.
+INVENTORY_SERVICE_HOST      | ORDER_INVENTORY_SERVICE_HOST      | localhost     | Host or IP address of the inventory service.
+INVENTORY_SERVICE_GRPC_PORT | ORDER_INVENTORY_SERVICE_GRPC_PORT | 9001          | Port number of the inventory service's gRPC server.
+PAYMENT_SERVICE_HOST        | ORDER_PAYMENT_SERVICE_HOST        | localhost     | Host or IP address of the payment service.
+PAYMENT_SERVICE_GRPC_PORT   | ORDER_PAYMENT_SERVICE_GRPC_PORT   | 9000          | Port number of the payment service's gRPC server.
 
 
