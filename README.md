@@ -14,9 +14,15 @@ The project consists of the following 3 microservices:
 - Inventory service
 - Payment service
 
-The goal is to present a simple e-commerce order operation, where an order can have multiple order items with different quantities.
+The goal is to present a simple e-commerce style order operation with gRPC, where an order can have multiple order items with different quantities.
 
-Currently the services are very minimal, because they were designed to mainly showcase gRPC usage. For this reason they lack a lot of features.
+Currently the services are very minimal, because they were mainly designed to showcase synchronous gRPC usage. For this reason they lack a lot of features. The communication flow is also simplified and does not include advanced techniques like circuit breaker pattern or proper error handling.
+
+Here is the flow of the order operation:
+
+![order operation flow](documentation/order_sequence_diagram.jpg)
+
+The services communicate synchronously with gRPC.
 
 # How to run the microservices
 
