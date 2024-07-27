@@ -116,4 +116,37 @@ INVENTORY_SERVICE_GRPC_PORT | ORDER_INVENTORY_SERVICE_GRPC_PORT | 9001          
 PAYMENT_SERVICE_HOST        | ORDER_PAYMENT_SERVICE_HOST        | localhost     | Host or IP address of the payment service.
 PAYMENT_SERVICE_GRPC_PORT   | ORDER_PAYMENT_SERVICE_GRPC_PORT   | 9000          | Port number of the payment service's gRPC server.
 
+# How to test the microservices' gRPC APIs
 
+Run all of the microservices in development mode. Development mode enables gRPC reflection in the service's gRPC servers so they can be tested with tools like grpcurl or Postman.
+
+Check the proto files of each service to know what data is sent in requests and what data is sent back in responses. The proto files can be found [here](https://github.com/hollowdll/grpc-microservices-proto/tree/main/def)
+
+The inventory service creates some products in the test data. The test data is saved in-memory so you don't need to have any separate databasesystem running. Check the output logs of inventory service to see the IDs (in this project product codes) of the test products. In this project they are UUIDs. You need these to test the gRPC requests.
+
+## How to test the order operation
+
+This section shows how to test the order service's order operation to create orders. It sends gRPC requests to the inventory service and payment service so you need to have all the microservices running.
+
+You can try stopping the other services and then try the order operation to see what happens. It should return a gRPC error with status code and error message. You can also try to start them again and wait a while. The order service should reconnect to the other services automatically after a while. This is a built-in feature in Go's gRPC client that uses gRPC connection pool out of the box. In this project is uses default options but it can be customized.
+
+Directory `services/order/tests/testdata/CreateOrder` has JSON files that you can use as the request data to quickly test the CreateOrder RPC. You can also craft your own request data to test different scenarios.
+
+Here is an example of testing the order operation with grpcurl by reading the request data from stdin. The following examples use Bash shell. This is not a grpcurl guide so you need to check the official documentation if you want to know how to use it.
+
+Go to the directory that contains the JSON files.
+```sh
+cd services/order/tests/testdata/CreateOrder
+```
+
+Successful request:
+```sh
+grpcurl -plaintext -d @ localhost:9002 orderpb.OrderService/CreateOrder < request_success.json
+```
+This should output the response data
+
+Invalid request
+```sh
+grpcurl -plaintext -d @ localhost:9002 orderpb.OrderService/CreateOrder < request_out_of_stock.json
+```
+This should return an error.
