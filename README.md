@@ -128,7 +128,7 @@ Run all of the microservices in development mode. Development mode enables gRPC 
 
 Check the proto files of each service to know what data is sent in requests and what data is sent back in responses. The proto files can be found [here](https://github.com/hollowdll/grpc-microservices-proto/tree/main/def)
 
-The inventory service creates some products in the test data. The test data is saved in-memory so you don't need to have any separate databasesystem running. Check the output logs of inventory service to see the IDs (in this project product codes) of the test products. In this project they are UUIDs. You need these to test the gRPC requests.
+The inventory service creates some products in the test data. The test data is saved in-memory so you don't need to have any separate database system running. Check the output logs of inventory service to see the IDs (in this project product codes) of the test products. In this project they are UUIDs. You need these in the gRPC request data.
 
 ## How to test the order operation
 
