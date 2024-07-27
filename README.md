@@ -65,7 +65,7 @@ By default, the services use default configurations. However, you can change the
 
 ## Configure payment service
 
-Configuration file: payment-config.yaml
+Configuration file: paymentservice-config.yaml
 
 Configuration file template with default values:
 ```yaml
@@ -82,7 +82,7 @@ APPLICATION_MODE    | PAYMENT_APPLICATION_MODE | development   | Mode the servic
 
 ## Configure inventory service
 
-Configuration file: inventory-config.yaml
+Configuration file: inventoryservice-config.yaml
 
 Configuration file template with default values:
 ```yaml
@@ -99,7 +99,7 @@ APPLICATION_MODE    | INVENTORY_APPLICATION_MODE | development   | Mode the serv
 
 ## Configure order service
 
-Configuration file: order-config.yaml
+Configuration file: orderservice-config.yaml
 
 Configuration file template with default values:
 ```yaml
