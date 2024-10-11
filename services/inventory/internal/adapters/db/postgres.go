@@ -3,6 +3,7 @@ package db
 import (
 	"context"
 	"fmt"
+	"time"
 
 	"github.com/hollowdll/go-grpc-microservices/services/inventory/config"
 	"github.com/hollowdll/go-grpc-microservices/services/inventory/internal/application/core/domain"
@@ -83,8 +84,10 @@ func (a *PostgresAdapter) UpdateProductStockQuantities(ctx context.Context, prod
 	// Bulk update transaction. Commit all or nothing.
 	return a.db.Transaction(func(tx *gorm.DB) error {
 		for _, product := range products {
+			now := time.Now().UnixMilli()
 			if err := tx.WithContext(ctx).Model(&Product{}).Where("product_code = ?", product.ProductCode).Updates(Product{
 				QuantityInStock: product.Quantity,
+				UpdatedAtMillis: now,
 			}).Error; err != nil {
 				return err
 			}
@@ -94,5 +97,21 @@ func (a *PostgresAdapter) UpdateProductStockQuantities(ctx context.Context, prod
 }
 
 func (a *PostgresAdapter) SaveProducts(ctx context.Context, products []*domain.Product) error {
-	return nil
+	return a.db.Transaction(func(tx *gorm.DB) error {
+		for _, product := range products {
+			productModel := Product{
+				ProductCode:     product.ProductCode,
+				Name:            product.Name,
+				Description:     product.Description,
+				UnitPriceCents:  product.UnitPriceCents,
+				QuantityInStock: product.QuantityInStock,
+				CreatedAtMillis: product.CreatedAtMillis,
+				UpdatedAtMillis: product.UpdatedAtMillis,
+			}
+			if err := tx.WithContext(ctx).Create(&productModel).Error; err != nil {
+				return err
+			}
+		}
+		return nil
+	})
 }
