@@ -1,9 +1,11 @@
 package db
 
 import (
+	"context"
 	"fmt"
 
 	"github.com/hollowdll/go-grpc-microservices/services/inventory/config"
+	"github.com/hollowdll/go-grpc-microservices/services/inventory/internal/application/core/domain"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
 )
@@ -54,4 +56,33 @@ func buildDSN(cfg *config.DBConfig) string {
 		cfg.Port,
 		cfg.SSLMode,
 	)
+}
+
+func (a *PostgresAdapter) GetProductsByCode(ctx context.Context, productCodes []string) ([]*domain.Product, error) {
+	var productModels []Product
+	res := a.db.WithContext(ctx).Where("product_code IN ?", productCodes).Find(&productModels)
+	if res.Error != nil {
+		return nil, res.Error
+	}
+	var products []*domain.Product
+	for _, pm := range productModels {
+		products = append(products, &domain.Product{
+			ProductCode:     pm.ProductCode,
+			Name:            pm.Name,
+			Description:     pm.Description,
+			UnitPriceCents:  pm.UnitPriceCents,
+			QuantityInStock: pm.QuantityInStock,
+			CreatedAtMillis: pm.CreatedAtMillis,
+			UpdatedAtMillis: pm.UpdatedAtMillis,
+		})
+	}
+	return products, res.Error
+}
+
+func (a *PostgresAdapter) UpdateProductStockQuantities(ctx context.Context, products []*domain.ProductQuantity) error {
+	return nil
+}
+
+func (a *PostgresAdapter) SaveProducts(ctx context.Context, products []*domain.Product) error {
+	return nil
 }
