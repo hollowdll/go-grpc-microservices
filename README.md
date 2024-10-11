@@ -88,14 +88,26 @@ Configuration file template with default values:
 ```yaml
 GRPC_PORT: 9001
 APPLICATION_MODE: development
+DB_HOST: localhost
+DB_USER: service
+DB_PASSWORD: inventory_psw
+DB_NAME: inventory_db
+DB_PORT: 5432
+DB_SSL_MODE: disable
 ```
 
 The following table describes the configurations for this service:
 
-Name in config file | Environment variable     | Default value | Description
-------------------- | ------------------------ | ------------- | -----------
+Name in config file | Environment variable       | Default value | Description
+------------------- | -------------------------- | ------------- | -----------
 GRPC_PORT           | INVENTORY_GRPC_PORT        | 9001          | gRPC server port number.
-APPLICATION_MODE    | INVENTORY_APPLICATION_MODE | development   | Mode the service runs in. e.g. development, staging, production.
+APPLICATION_MODE    | INVENTORY_APPLICATION_MODE | development   | Mode the service runs in. e.g. development, testing, staging, production.
+DB_HOST             | INVENTORY_DB_HOST          | localhost     | Database host.
+DB_USER             | INVENTORY_DB_USER          | service       | Database user.
+DB_PASSWORD         | INVENTORY_DB_PASSWORD      | inventory_psw | Database password.
+DB_NAME             | INVENTORY_DB_NAME          | inventory     | Database name.
+DB_PORT             | INVENTORY_DB_PORT          | 5432          | Database port number.
+DB_SSL_MODE         | INVENTORY_DB_SSL_MODE      | disable       | Database SSL connection setting. Can be disable, allow, prefer, require, verify-ca, verify-full. Check postgres documentation for details.
 
 ## Configure order service
 

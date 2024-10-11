@@ -22,11 +22,11 @@ const (
 	DefaultGrpcPort        int    = 9001
 	DefaultApplicationMode string = "development"
 	DefaultDBHost          string = "localhost"
-	DefaultDBUser          string = "service_user"
+	DefaultDBUser          string = "service"
 	DefaultDBPassword      string = "inventory_psw"
 	DefaultDBName          string = "inventory_db"
 	DefaultDBPort          int    = 5432
-	DefaultDBSSLMode       string = "disabled"
+	DefaultDBSSLMode       string = "disable"
 )
 
 var defaultConfigs = map[string]interface{}{
