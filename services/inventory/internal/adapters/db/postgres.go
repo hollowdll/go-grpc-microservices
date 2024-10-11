@@ -80,7 +80,17 @@ func (a *PostgresAdapter) GetProductsByCode(ctx context.Context, productCodes []
 }
 
 func (a *PostgresAdapter) UpdateProductStockQuantities(ctx context.Context, products []*domain.ProductQuantity) error {
-	return nil
+	// Bulk update transaction. Commit all or nothing.
+	return a.db.Transaction(func(tx *gorm.DB) error {
+		for _, product := range products {
+			if err := tx.WithContext(ctx).Model(&Product{}).Where("product_code = ?", product.ProductCode).Updates(Product{
+				QuantityInStock: product.Quantity,
+			}).Error; err != nil {
+				return err
+			}
+		}
+		return nil
+	})
 }
 
 func (a *PostgresAdapter) SaveProducts(ctx context.Context, products []*domain.Product) error {
