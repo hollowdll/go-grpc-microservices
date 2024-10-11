@@ -27,7 +27,8 @@ func initApplication(application *api.Application, cfg *config.Config) {
 func main() {
 	log.Println("starting inventory service ...")
 
-	cfg := config.NewConfig()
+	config.InitConfig()
+	cfg := config.LoadConfig()
 	log.Printf("running application in %s mode", cfg.ApplicationMode)
 
 	dbAdapter := db.NewInMemoryDBAdapter()
