@@ -17,7 +17,7 @@ const (
 	DBPasswordConfig      string = "DB_PASSWORD"
 	DBNameConfig          string = "DB_NAME"
 	DBPortConfig          string = "DB_PORT"
-	DBSSLMode             string = "DB_SSL_MODE"
+	DBSSLModeConfig       string = "DB_SSL_MODE"
 
 	DefaultGrpcPort        int    = 9001
 	DefaultApplicationMode string = "development"
@@ -37,7 +37,7 @@ var defaultConfigs = map[string]interface{}{
 	DBPasswordConfig:      DefaultDBPassword,
 	DBNameConfig:          DefaultDBName,
 	DBPortConfig:          DefaultDBPort,
-	DBSSLMode:             DefaultDBSSLMode,
+	DBSSLModeConfig:       DefaultDBSSLMode,
 }
 
 type DBConfig struct {
@@ -72,6 +72,14 @@ func LoadConfig() *Config {
 	return &Config{
 		GrpcPort:        convertPort(viper.GetString(GrpcPortConfig)),
 		ApplicationMode: viper.GetString(ApplicationModeConfig),
+		DB: DBConfig{
+			Host:     viper.GetString(DBHostConfig),
+			User:     viper.GetString(DBUserConfig),
+			Password: viper.GetString(DBPasswordConfig),
+			DBName:   viper.GetString(DBNameConfig),
+			Port:     convertPort(viper.GetString(DBPortConfig)),
+			SSLMode:  viper.GetString(DBSSLModeConfig),
+		},
 	}
 }
 
@@ -89,7 +97,7 @@ func setConfigDefaults() {
 	viper.SetDefault(DBPasswordConfig, DefaultDBPassword)
 	viper.SetDefault(DBNameConfig, DefaultDBName)
 	viper.SetDefault(DBPortConfig, DefaultDBPort)
-	viper.SetDefault(DBSSLMode, DefaultDBSSLMode)
+	viper.SetDefault(DBSSLModeConfig, DefaultDBSSLMode)
 }
 
 func checkConfigDefaults() {
