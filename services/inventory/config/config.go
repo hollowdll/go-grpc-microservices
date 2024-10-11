@@ -24,6 +24,16 @@ var defaultConfigs = map[string]interface{}{
 type Config struct {
 	GrpcPort        int
 	ApplicationMode string
+	DB              DBConfig
+}
+
+type DBConfig struct {
+	Host     string
+	User     string
+	Password string
+	DBName   string
+	Port     int
+	SSLMode  string
 }
 
 func NewConfig() *Config {
@@ -59,6 +69,10 @@ func NewConfig() *Config {
 
 func (c *Config) IsDevelopmentMode() bool {
 	return c.ApplicationMode == "development"
+}
+
+func (c *Config) IsTestingMode() bool {
+	return c.ApplicationMode == "testing"
 }
 
 func convertPort(portStr string) int {
