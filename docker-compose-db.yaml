@@ -1,0 +1,16 @@
+version: '3'
+
+services:
+  postgres:
+    image: postgres:17.0-alpine
+    container_name: postgres_container
+    env_file:
+      - .env.db
+    ports:
+      - '${POSTGRES_PORT}:5432' 
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./scripts/initdb.sql:/docker-entrypoint-initdb.d/initdb.sql
+
+volumes:
+  postgres_data:

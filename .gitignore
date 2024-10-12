@@ -25,3 +25,7 @@ go.work.sum
 paymentservice-config.yaml
 inventoryservice-config.yaml
 orderservice-config.yaml
+
+# Environment variable files
+.env
+.env.db
