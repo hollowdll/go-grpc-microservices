@@ -24,6 +24,31 @@ Here is the flow of the order operation:
 
 The services communicate synchronously with gRPC.
 
+# How to run databases
+
+Inventory service has a PostgreSQL database that stores products. There is a Docker Compose file `docker-compose-db.yaml` to ease the database setup in local environments. It creates the database on initialization and saves the data to a Docker volume. You need Docker to use it. This section uses Linux.
+
+Create a .env.db file to the project root
+```sh
+touch .env.db
+```
+Copy the environment variables in the `.env.db.template` file to the file and change the values to desired values. These environment variables will be set in the PostgreSQL container.
+
+Also set environment variable `POSTGRES_HOST_PORT` to port forward your desired host port to the database container. This allows the inventory service to access the database through the port.
+```sh
+export POSTGRES_HOST_PORT=5432
+```
+
+Create and start container
+```sh
+docker compose -f docker-compose-db.yaml up
+```
+
+If running in the backround is preferred
+```sh
+docker compose -f docker-compose-db.yaml up -d
+```
+
 # How to run the microservices
 
 Make sure that you have Go installed. Instructions [here](https://go.dev/doc/install).
@@ -136,11 +161,11 @@ PAYMENT_SERVICE_GRPC_PORT   | ORDER_PAYMENT_SERVICE_GRPC_PORT   | 9000          
 
 # How to test the microservices' gRPC APIs
 
-Run all of the microservices in development mode. Development mode enables gRPC reflection in the service's gRPC servers so they can be tested with tools like grpcurl or Postman.
+Run all of the microservices in development mode. Development mode saves test data to the inventory database. enables gRPC reflection in the service's gRPC servers so they can be tested with tools like grpcurl or Postman.
 
 Check the proto files of each service to know what data is sent in requests and what data is sent back in responses. The proto files can be found [here](https://github.com/hollowdll/grpc-microservices-proto/tree/main/def)
 
-The inventory service creates some products in the test data. The test data is saved in-memory so you don't need to have any separate database system running. Check the output logs of inventory service to see the IDs (in this project product codes) of the test products. In this project they are UUIDs. You need these in the gRPC request data.
+The inventory service creates some products in the test data. Check the output logs of inventory service to see the IDs (in this project product codes) of the test products. In this project they are UUIDs. You need these in the gRPC request data.
 
 ## How to test the order operation
 
