@@ -24,6 +24,31 @@ Here is the flow of the order operation:
 
 The services communicate synchronously with gRPC.
 
+# How to run the database
+
+Inventory service has a PostgreSQL database that stores products. There is a Docker Compose file `docker-compose-db.yaml` to ease the database setup in local environments. It creates the database on initialization and saves the data to a Docker volume. You need Docker to use it. This section uses Linux.
+
+Create a .env.db file to the project root
+```sh
+touch .env.db
+```
+Copy the environment variables in the `.env.db.template` file to the file and change the values to desired values. These environment variables will be set in the PostgreSQL container.
+
+Also set environment variable `POSTGRES_HOST_PORT` to port forward your desired host port to the database container. This allows the inventory service to access the database through the port.
+```sh
+export POSTGRES_HOST_PORT=5432
+```
+
+Create and start container
+```sh
+docker compose -f docker-compose-db.yaml up
+```
+
+If running in the backround is preferred
+```sh
+docker compose -f docker-compose-db.yaml up -d
+```
+
 # How to run the microservices
 
 Make sure that you have Go installed. Instructions [here](https://go.dev/doc/install).
@@ -88,14 +113,26 @@ Configuration file template with default values:
 ```yaml
 GRPC_PORT: 9001
 APPLICATION_MODE: development
+DB_HOST: localhost
+DB_USER: service
+DB_PASSWORD: inventory_psw
+DB_NAME: inventory_db
+DB_PORT: 5432
+DB_SSL_MODE: disable
 ```
 
 The following table describes the configurations for this service:
 
-Name in config file | Environment variable     | Default value | Description
-------------------- | ------------------------ | ------------- | -----------
+Name in config file | Environment variable       | Default value | Description
+------------------- | -------------------------- | ------------- | -----------
 GRPC_PORT           | INVENTORY_GRPC_PORT        | 9001          | gRPC server port number.
-APPLICATION_MODE    | INVENTORY_APPLICATION_MODE | development   | Mode the service runs in. e.g. development, staging, production.
+APPLICATION_MODE    | INVENTORY_APPLICATION_MODE | development   | Mode the service runs in. e.g. development, testing, staging, production.
+DB_HOST             | INVENTORY_DB_HOST          | localhost     | Database host.
+DB_USER             | INVENTORY_DB_USER          | service       | Database user.
+DB_PASSWORD         | INVENTORY_DB_PASSWORD      | inventory_psw | Database password.
+DB_NAME             | INVENTORY_DB_NAME          | inventory_db  | Database name.
+DB_PORT             | INVENTORY_DB_PORT          | 5432          | Database port number.
+DB_SSL_MODE         | INVENTORY_DB_SSL_MODE      | disable       | Database SSL connection setting. Can be disable, allow, prefer, require, verify-ca, verify-full. Check postgres documentation for details.
 
 ## Configure order service
 
@@ -124,11 +161,11 @@ PAYMENT_SERVICE_GRPC_PORT   | ORDER_PAYMENT_SERVICE_GRPC_PORT   | 9000          
 
 # How to test the microservices' gRPC APIs
 
-Run all of the microservices in development mode. Development mode enables gRPC reflection in the service's gRPC servers so they can be tested with tools like grpcurl or Postman.
+Run all of the microservices in development mode. Development mode saves test data to the inventory database. enables gRPC reflection in the service's gRPC servers so they can be tested with tools like grpcurl or Postman.
 
 Check the proto files of each service to know what data is sent in requests and what data is sent back in responses. The proto files can be found [here](https://github.com/hollowdll/grpc-microservices-proto/tree/main/def)
 
-The inventory service creates some products in the test data. The test data is saved in-memory so you don't need to have any separate database system running. Check the output logs of inventory service to see the IDs (in this project product codes) of the test products. In this project they are UUIDs. You need these in the gRPC request data.
+The inventory service creates some products in the test data. Check the output logs of inventory service to see the IDs (in this project product codes) of the test products. In this project they are UUIDs. You need these in the gRPC request data.
 
 ## How to test the order operation
 
@@ -156,3 +193,11 @@ Invalid request
 grpcurl -plaintext -d @ localhost:9002 orderpb.OrderService/CreateOrder < request_out_of_stock.json
 ```
 This should return an error.
+
+# Updates
+
+### Oct 15 2024
+
+Added PostgreSQL database for the inventory service and replaced the in-memory database with it. The service uses GORM library to connect to the database and to run queries. Docker Compose can be used to run a Postgres instance in a container.
+
+Blog post [here](https://juusohakala.com/blog/go-grpc-microservices-dev-part1/).

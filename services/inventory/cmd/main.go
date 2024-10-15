@@ -27,10 +27,15 @@ func initApplication(application *api.Application, cfg *config.Config) {
 func main() {
 	log.Println("starting inventory service ...")
 
-	cfg := config.NewConfig()
+	config.InitConfig()
+	cfg := config.LoadConfig()
 	log.Printf("running application in %s mode", cfg.ApplicationMode)
 
-	dbAdapter := db.NewInMemoryDBAdapter()
+	dbAdapter, err := db.NewPostgresAdapter(cfg)
+	if err != nil {
+		log.Fatalf("failed to connect to database: %v", err)
+	}
+
 	application := api.NewApplication(dbAdapter)
 	initApplication(application, cfg)
 
