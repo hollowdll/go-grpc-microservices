@@ -29,3 +29,6 @@ orderservice-config.yaml
 # Environment variable files
 .env
 .env.db
+.env.payment
+.env.inventory
+.env.order

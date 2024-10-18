@@ -1,0 +1,10 @@
+services:
+  payment:
+    build:
+      context: ./services/payment/
+      dockerfile: Dockerfile
+    container_name: payment_container
+    env_file:
+      - .env.payment
+    ports:
+      - '${PAYMENT_GRPC_PORT:-9000}:${PAYMENT_GRPC_PORT:-9000}' 
