@@ -24,6 +24,14 @@ Here is the flow of the order operation:
 
 The services communicate synchronously with gRPC.
 
+# Updates
+
+### Oct 15 2024
+
+Added PostgreSQL database for the inventory service and replaced the in-memory database with it. The service uses GORM library to connect to the database and to run queries. Docker Compose can be used to run a Postgres instance in a container.
+
+Blog post [here](https://juusohakala.com/blog/go-grpc-microservices-dev-part1/).
+
 # How to run the database
 
 Inventory service has a PostgreSQL database that stores products. There is a Docker Compose file `docker-compose-db.yaml` to ease the database setup in local environments. It creates the database on initialization and saves the data to a Docker volume. You need Docker to use it. This section uses Linux.
@@ -193,11 +201,3 @@ Invalid request
 grpcurl -plaintext -d @ localhost:9002 orderpb.OrderService/CreateOrder < request_out_of_stock.json
 ```
 This should return an error.
-
-# Updates
-
-### Oct 15 2024
-
-Added PostgreSQL database for the inventory service and replaced the in-memory database with it. The service uses GORM library to connect to the database and to run queries. Docker Compose can be used to run a Postgres instance in a container.
-
-Blog post [here](https://juusohakala.com/blog/go-grpc-microservices-dev-part1/).
