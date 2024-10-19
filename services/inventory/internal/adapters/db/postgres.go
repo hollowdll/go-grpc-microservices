@@ -84,10 +84,12 @@ func (a *PostgresAdapter) UpdateProductStockQuantities(ctx context.Context, prod
 	return a.db.Transaction(func(tx *gorm.DB) error {
 		for _, product := range products {
 			now := time.Now().UnixMilli()
-			if err := tx.WithContext(ctx).Model(&Product{}).Where("product_code = ?", product.ProductCode).Updates(Product{
-				QuantityInStock: product.Quantity,
-				UpdatedAtMillis: now,
-			}).Error; err != nil {
+			if err := tx.WithContext(ctx).Model(&Product{}).Where("product_code = ?", product.ProductCode).
+				Select("QuantityInStock", "UpdatedAtMillis").
+				Updates(Product{
+					QuantityInStock: product.Quantity,
+					UpdatedAtMillis: now,
+				}).Error; err != nil {
 				return err
 			}
 		}
