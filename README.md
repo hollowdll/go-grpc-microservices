@@ -32,6 +32,12 @@ Added PostgreSQL database for the inventory service and replaced the in-memory d
 
 Blog post [here](https://juusohakala.com/blog/go-grpc-microservices-dev-part1/).
 
+### Oct 20 2024
+
+Added Docker container support, Dockerfiles for the services, Docker Compose YAML file to run everything together, and pushed service Docker images to Docker Hub image registry.
+
+Blog post [here](https://juusohakala.com/blog/go-grpc-microservices-dev-part2/).
+
 # How to run the database
 
 Inventory service has a PostgreSQL database that stores products. There is a Docker Compose file `docker-compose-db.yaml` to ease the database setup in local environments. It creates the database on initialization and saves the data to a Docker volume. You need Docker to use it. This section uses Linux.
@@ -84,6 +90,37 @@ go run cmd/main.go
 ```
 
 After this you should see some output logs telling the service is starting if nothing went wrong.
+
+# How to run the microservices with Docker
+
+Create .env files and set environment variables if needed
+```sh
+touch .env.db
+touch .env.inventory
+touch .env.payment
+touch .env.order
+```
+
+Run everything together with Docker Compose using local image builds:
+```sh
+docker compose up
+```
+
+If the postgres volume doesn't exist yet, you need to remove the containers and run them again. To remove them run:
+```sh
+docker compose down
+```
+
+Or pull the images from Docker Hub and run containers separately:
+```sh
+docker pull hakj/go-grpc-microservices-inventory:1.0.0  # or any other existing tag
+docker pull hakj/go-grpc-microservices-payment:1.0.0  # or any other existing tag
+docker pull hakj/go-grpc-microservices-order:1.0.0  # or any other existing tag
+```
+
+- [Inventory image repository](https://hub.docker.com/r/hakj/go-grpc-microservices-inventory)
+- [Payment image repository](https://hub.docker.com/r/hakj/go-grpc-microservices-payment)
+- [Order image repository](https://hub.docker.com/r/hakj/go-grpc-microservices-order)
 
 # How to configure the microservices
 
