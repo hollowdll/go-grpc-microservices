@@ -23,7 +23,7 @@ const (
 	DefaultApplicationMode string = "development"
 	DefaultDBHost          string = "localhost"
 	DefaultDBUser          string = "service"
-	DefaultDBPassword      string = "inventory_psw"
+	DefaultDBPassword      string = "service_psw"
 	DefaultDBName          string = "inventory_db"
 	DefaultDBPort          int    = 5432
 	DefaultDBSSLMode       string = "disable"
