@@ -1,0 +1,51 @@
+services:
+  payment:
+    build:
+      context: ./services/payment/
+      dockerfile: Dockerfile
+    container_name: payment_container
+    env_file:
+      - .env.payment
+    ports:
+      - '${PAYMENT_GRPC_PORT:-9000}:${PAYMENT_GRPC_PORT:-9000}'
+
+  inventory:
+    build:
+      context: ./services/inventory/
+      dockerfile: Dockerfile
+    container_name: inventory_container
+    env_file:
+      - .env.inventory
+    environment:
+      - INVENTORY_DB_HOST=postgres
+    ports:
+      - '${INVENTORY_GRPC_PORT:-9001}:${INVENTORY_GRPC_PORT:-9001}'
+    depends_on:
+      - postgres
+
+  order:
+    build:
+      context: ./services/order/
+      dockerfile: Dockerfile
+    container_name: order_container
+    env_file:
+      - .env.order
+    environment:
+      - ORDER_INVENTORY_SERVICE_HOST=inventory
+      - ORDER_PAYMENT_SERVICE_HOST=payment
+    ports:
+      - '${ORDER_GRPC_PORT:-9002}:${ORDER_GRPC_PORT:-9002}'
+
+  postgres:
+    image: postgres:17.0-alpine
+    container_name: postgres_container
+    env_file:
+      - .env.db
+    ports:
+      - '${POSTGRES_HOST_PORT:-5432}:5432'
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./scripts/initdb.sql:/docker-entrypoint-initdb.d/initdb.sql
+
+volumes:
+  postgres_data:

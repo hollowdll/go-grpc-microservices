@@ -24,6 +24,20 @@ Here is the flow of the order operation:
 
 The services communicate synchronously with gRPC.
 
+# Updates
+
+### Oct 15 2024
+
+Added PostgreSQL database for the inventory service and replaced the in-memory database with it. The service uses GORM library to connect to the database and to run queries. Docker Compose can be used to run a Postgres instance in a container.
+
+Blog post [here](https://juusohakala.com/blog/go-grpc-microservices-dev-part1/).
+
+### Oct 20 2024
+
+Added Docker container support, Dockerfiles for the services, Docker Compose YAML file to run everything together, and pushed service Docker images to Docker Hub image registry.
+
+Blog post [here](https://juusohakala.com/blog/go-grpc-microservices-dev-part2/).
+
 # How to run the database
 
 Inventory service has a PostgreSQL database that stores products. There is a Docker Compose file `docker-compose-db.yaml` to ease the database setup in local environments. It creates the database on initialization and saves the data to a Docker volume. You need Docker to use it. This section uses Linux.
@@ -77,6 +91,37 @@ go run cmd/main.go
 
 After this you should see some output logs telling the service is starting if nothing went wrong.
 
+# How to run the microservices with Docker
+
+Create .env files and set environment variables if needed
+```sh
+touch .env.db
+touch .env.inventory
+touch .env.payment
+touch .env.order
+```
+
+Run everything together with Docker Compose using local image builds:
+```sh
+docker compose up
+```
+
+If the postgres volume doesn't exist yet, you need to remove the containers and run them again. To remove them run:
+```sh
+docker compose down
+```
+
+Or pull the images from Docker Hub and run containers separately:
+```sh
+docker pull hakj/go-grpc-microservices-inventory:1.0.0  # or any other existing tag
+docker pull hakj/go-grpc-microservices-payment:1.0.0  # or any other existing tag
+docker pull hakj/go-grpc-microservices-order:1.0.0  # or any other existing tag
+```
+
+- [Inventory image repository](https://hub.docker.com/r/hakj/go-grpc-microservices-inventory)
+- [Payment image repository](https://hub.docker.com/r/hakj/go-grpc-microservices-payment)
+- [Order image repository](https://hub.docker.com/r/hakj/go-grpc-microservices-order)
+
 # How to configure the microservices
 
 By default, the services use default configurations. However, you can change these defaults with configuration files or environment variables, as the [12-factor app](https://12factor.net/) methodology suggests.
@@ -115,7 +160,7 @@ GRPC_PORT: 9001
 APPLICATION_MODE: development
 DB_HOST: localhost
 DB_USER: service
-DB_PASSWORD: inventory_psw
+DB_PASSWORD: service_psw
 DB_NAME: inventory_db
 DB_PORT: 5432
 DB_SSL_MODE: disable
@@ -129,7 +174,7 @@ GRPC_PORT           | INVENTORY_GRPC_PORT        | 9001          | gRPC server p
 APPLICATION_MODE    | INVENTORY_APPLICATION_MODE | development   | Mode the service runs in. e.g. development, testing, staging, production.
 DB_HOST             | INVENTORY_DB_HOST          | localhost     | Database host.
 DB_USER             | INVENTORY_DB_USER          | service       | Database user.
-DB_PASSWORD         | INVENTORY_DB_PASSWORD      | inventory_psw | Database password.
+DB_PASSWORD         | INVENTORY_DB_PASSWORD      | service_psw   | Database password.
 DB_NAME             | INVENTORY_DB_NAME          | inventory_db  | Database name.
 DB_PORT             | INVENTORY_DB_PORT          | 5432          | Database port number.
 DB_SSL_MODE         | INVENTORY_DB_SSL_MODE      | disable       | Database SSL connection setting. Can be disable, allow, prefer, require, verify-ca, verify-full. Check postgres documentation for details.
@@ -193,11 +238,3 @@ Invalid request
 grpcurl -plaintext -d @ localhost:9002 orderpb.OrderService/CreateOrder < request_out_of_stock.json
 ```
 This should return an error.
-
-# Updates
-
-### Oct 15 2024
-
-Added PostgreSQL database for the inventory service and replaced the in-memory database with it. The service uses GORM library to connect to the database and to run queries. Docker Compose can be used to run a Postgres instance in a container.
-
-Blog post [here](https://juusohakala.com/blog/go-grpc-microservices-dev-part1/).
