@@ -1,0 +1,25 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: inventory
+  name: inventory
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: inventory
+  template:
+    metadata:
+      labels:
+        app: inventory
+      name: inventory
+    spec:
+      containers:
+        - name: inventory
+          image: hakj/go-grpc-microservices-inventory:1.0.1
+          env:
+            - name: INVENTORY_GRPC_PORT
+              value: "9001"
+            - name: INVENTORY_DB_HOST
+              value: "postgres"
