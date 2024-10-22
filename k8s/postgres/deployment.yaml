@@ -34,3 +34,26 @@ spec:
         - name: postgres-initdb
           configMap:
             name: postgres-initdb-config
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: postgres
+  labels:
+    app: postgres
+spec:
+  ports:
+    - name: '5432'
+      port: 5432
+      protocol: TCP
+      targetPort: 5432
+  selector:
+    app: postgres
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: postgres-initdb-config
+data:
+  initdb.sql: |
+    CREATE DATABASE inventory_db;
