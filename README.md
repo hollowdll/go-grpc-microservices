@@ -38,6 +38,12 @@ Added Docker container support, Dockerfiles for the services, Docker Compose YAM
 
 Blog post [here](https://juusohakala.com/blog/go-grpc-microservices-dev-part2/).
 
+### Oct 23 2024
+
+Added local Kubernetes support, documentation for Kubernetes deployment, YAML resource files, and Skaffold configuration file to run everything with Skaffold. The Kubernetes deployment has NGINX Ingress controller load balancer to route traffic to each service based on ingress domain host.
+
+Blog post [here]().
+
 # How to run the database
 
 Inventory service has a PostgreSQL database that stores products. There is a Docker Compose file `docker-compose-db.yaml` to ease the database setup in local environments. It creates the database on initialization and saves the data to a Docker volume. You need Docker to use it. This section uses Linux.
@@ -121,6 +127,69 @@ docker pull hakj/go-grpc-microservices-order:1.0.0  # or any other existing tag
 - [Inventory image repository](https://hub.docker.com/r/hakj/go-grpc-microservices-inventory)
 - [Payment image repository](https://hub.docker.com/r/hakj/go-grpc-microservices-payment)
 - [Order image repository](https://hub.docker.com/r/hakj/go-grpc-microservices-order)
+
+# How to run the microservices in local Kubernetes
+
+Note: this was tested with minikube and Linux.
+
+Make sure you have the following installed:
+- Docker
+- Local Kubernetes cluster
+- kubectl
+- Helm
+- Skaffold
+
+Start cluster
+```sh
+minikube start
+```
+
+Install NGINX Ingress controller
+```sh
+helm repo add ingress-nginx https://kubernetes.github.io/ingress-nginx
+helm repo update
+helm install nginx-ingress ingress-nginx/ingress-nginx
+```
+
+Add these to `/etc/hosts` file
+```sh
+127.0.0.1 ingress.payment.local
+127.0.0.1 ingress.inventory.local
+127.0.0.1 ingress.order.local
+```
+
+Deploy everything
+```sh
+skaffold run
+```
+Make sure to run this in the project root
+
+Start tunnel in another terminal session (maps host machine IP 127.0.0.1 to the Ingress controller load balancer)
+```sh
+minikube tunnel
+```
+
+Now it should be possible to send gRPC requests to the services on the host machine. Below is a list of the services' sockets:
+- payment: `ingress.payment.local:80`
+- inventory: `ingress.inventory.local:80`
+- order: `ingress.order.local:80`
+
+Use these endpoints to send gRPC requests with a gRPC client e.g. grpcurl or Postman.
+
+Example request to the order service with grpcurl:
+```sh
+grpcurl ingress.order.local:80 list
+```
+
+Delete deployed resources:
+```sh
+skaffold delete
+```
+
+Stop the cluster:
+```sh
+minikube stop
+```
 
 # How to configure the microservices
 
