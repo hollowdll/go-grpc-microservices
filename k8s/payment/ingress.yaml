@@ -3,17 +3,17 @@ kind: Ingress
 metadata:
   annotations: 
     nginx.ingress.kubernetes.io/backend-protocol: GRPC
-  name: order
+  name: paymnet
 spec:
   ingressClassName: nginx
   rules:
-    - host: ingress.order.local
+    - host: ingress.payment.local
       http:
         paths:
           - path: /
             pathType: Prefix
             backend:
               service:
-                name: order
+                name: payment
                 port:
-                  number: 9002
+                  number: 9000
