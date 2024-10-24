@@ -1,0 +1,27 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: order
+  name: order
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: order
+  template:
+    metadata:
+      labels:
+        app: order
+      name: order
+    spec:
+      containers:
+        - name: order
+          image: hakj/go-grpc-microservices-order:1.0.0
+          env:
+            - name: ORDER_GRPC_PORT
+              value: "9002"
+            - name: ORDER_INVENTORY_SERVICE_HOST
+              value: "inventory"
+            - name: ORDER_PAYMENT_SERVICE_HOST
+              value: "payment"

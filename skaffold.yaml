@@ -1,0 +1,12 @@
+apiVersion: skaffold/v2beta29
+kind: Config
+metadata:
+  name: go-grpc-microservices
+deploy:
+  kubectl:
+    defaultNamespace: default
+    manifests:
+      - k8s/postgres/**
+      - k8s/payment/**
+      - k8s/inventory/**
+      - k8s/order/**

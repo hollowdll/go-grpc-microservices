@@ -1,0 +1,23 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: payment
+  name: payment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: payment
+  template:
+    metadata:
+      labels:
+        app: payment
+      name: payment
+    spec:
+      containers:
+        - name: payment
+          image: hakj/go-grpc-microservices-payment:1.0.0
+          env:
+            - name: PAYMENT_GRPC_PORT
+              value: "9000"

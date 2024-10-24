@@ -1,0 +1,19 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  annotations: 
+    nginx.ingress.kubernetes.io/backend-protocol: GRPC
+  name: paymnet
+spec:
+  ingressClassName: nginx
+  rules:
+    - host: ingress.payment.local
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: payment
+                port:
+                  number: 9000
