@@ -38,11 +38,11 @@ Added Docker container support, Dockerfiles for the services, Docker Compose YAM
 
 Blog post [here](https://juusohakala.com/blog/go-grpc-microservices-dev-part2/).
 
-### Oct 23 2024
+### Oct 24 2024
 
 Added local Kubernetes support, documentation for Kubernetes deployment, YAML resource files, and Skaffold configuration file to run everything with Skaffold. The Kubernetes deployment has NGINX Ingress controller load balancer to route traffic to each service based on ingress domain host.
 
-Blog post [here]().
+Blog post [here](https://juusohakala.com/blog/go-grpc-microservices-dev-part3/).
 
 # How to run the database
 
@@ -134,7 +134,7 @@ Note: this was tested with minikube and Linux.
 
 Make sure you have the following installed:
 - Docker
-- Local Kubernetes cluster
+- Local Kubernetes cluster (e.g. minikube or Kind)
 - kubectl
 - Helm
 - Skaffold
@@ -164,7 +164,7 @@ skaffold run
 ```
 Make sure to run this in the project root
 
-Start tunnel in another terminal session (maps host machine IP 127.0.0.1 to the Ingress controller load balancer)
+Start tunnel in another terminal session (maps host machine IP 127.0.0.1 to the cluster load balancer)
 ```sh
 minikube tunnel
 ```
